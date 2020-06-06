@@ -1,0 +1,136 @@
+class CSet<T>
+    {
+        public Hashtable data;
+        public int count;
+
+        public CSet()
+        {
+            data = new Hashtable();
+            count = 0;
+        }
+
+        public void add(T x)
+        {
+            string hv = hash(x);
+            if (!data.ContainsKey(hv))
+            {
+                data.Add(hv,x);
+                count++;
+            }
+        }
+
+        public void remove(T x)
+        {
+            string hv = hash(x);
+            if (data.ContainsKey(hv))
+            {
+                data.Remove(hv);
+                count--;
+            }
+        }
+
+        public void remove(params T[] x)
+        {
+            foreach (var VARIABLE in x)
+            {
+                remove(VARIABLE);
+            }
+        }
+
+        public string hash( T x)
+        {
+            string s = x.ToString();
+            int i = 0;
+            foreach (var VARIABLE in s)
+            {
+                i += VARIABLE;
+            }
+
+            return i.ToString();
+        }
+
+        public void Display()
+        {
+            foreach (var VARIABLE in data.Values)
+            {
+                Console.Write(VARIABLE+" | ");
+            }
+            Console.WriteLine();
+        }
+
+        public void add(params T[] x)
+        {
+            foreach (var VARIABLE in x)
+            {
+                add(VARIABLE);
+            }
+        }
+
+        public CSet<T> Union(CSet<T> B)
+        {
+            CSet<T> temp = new CSet<T>();
+            foreach (var VARIABLE in data.Keys)
+            {
+                temp.add((T)data[VARIABLE]);
+            }
+
+            foreach (var VARIABLE in B.data.Keys)
+            {
+                if (!data.ContainsKey(VARIABLE))
+                {
+                    temp.add((T)B.data[VARIABLE]);
+                }
+            }
+
+            return temp;
+        }
+
+        public CSet<T> Intersection(CSet<T> B)
+        {
+            CSet<T> temp =new CSet<T>();
+            foreach (var VARIABLE in data.Keys)
+            {
+                if (B.data.ContainsKey(VARIABLE))
+                {
+                    temp.add((T)data[VARIABLE]);
+                }
+            }
+
+            return temp;
+        }
+
+        public bool IsSubSet(CSet<T> B)
+        {
+            if (count > B.count)
+            {
+                return false;
+            }
+            else
+            {
+
+                foreach (var VARIABLE in data.Keys)
+                {
+                    if (!B.data.ContainsKey(VARIABLE))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        public CSet<T> Difference(CSet<T> B)
+        {
+            CSet<T> temp=new CSet<T>();
+            foreach (object key in data.Keys)
+            {
+                if (!B.data.ContainsKey(key))
+                {
+                    temp.add((T)data[key]);
+                }
+            }
+            
+            return temp;
+        }
+        }
